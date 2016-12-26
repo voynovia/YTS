@@ -16,11 +16,45 @@
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <customObject id="NcH-sy-i1H" customClass="StatusMenuController" customModule="YTS" customModuleProvider="target">
             <connections>
+                <outlet property="cancelLibrariesUpdate" destination="hDD-jb-ric" id="WGG-s4-TPk"/>
                 <outlet property="statusMenu" destination="26U-5K-RlB" id="XMu-Qp-P7A"/>
+                <outlet property="updateLibraries" destination="F1O-qP-gPa" id="R8v-p4-v5x"/>
             </connections>
         </customObject>
         <menu id="26U-5K-RlB">
             <items>
+                <menuItem title="Preferences..." id="cPB-AX-PRU">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="preferencesClicked:" target="NcH-sy-i1H" id="2j0-2O-tKJ"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="QA5-BF-m5u"/>
+                <menuItem title="Update Libraries" id="F1O-qP-gPa">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="updateLibrariesClicked:" target="NcH-sy-i1H" id="3L2-1z-rKR"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Cancel Libraries Update" enabled="NO" id="hDD-jb-ric">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="cancelLibrariesUpdateClicked:" target="NcH-sy-i1H" id="0O9-S2-hr2"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="nhw-NG-ey5"/>
+                <menuItem title="Check for Updates..." id="kXx-ne-U4y">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="checkForUpdatesClicked:" target="NcH-sy-i1H" id="cNt-yy-TJ8"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="About YTS Server" id="gMC-Pm-sNO">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="aboutClicked:" target="NcH-sy-i1H" id="XFi-H4-5u6"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Quit" id="8k4-Uv-rC0">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
