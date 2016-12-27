@@ -132,7 +132,6 @@ class Torrentino {
                     if let rating = head.at_css("meta[itemprop='ratingValue']")?["content"] {
                         movie.rating = Double(rating)!
                     }
-                    //                movie.small_cover_image = head.at_css("div.cover img")?["src"]
                     movie.small_cover_image = "https://st.kp.yandex.net/images/film_iphone/iphone360_"+String(movie.id)+".jpg"
                     movie.medium_cover_image = "https://st.kp.yandex.net/images/film_big/"+String(movie.id)+".jpg"
                     let synopsis = head.xpath("//div[@class='specialty']/text()")[1].text!.trim()

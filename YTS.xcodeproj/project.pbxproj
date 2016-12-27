@@ -12,7 +12,6 @@
 		F77756121E10F49800CE64C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F77756111E10F49800CE64C3 /* Assets.xcassets */; };
 		F77756151E10F49800CE64C3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F77756131E10F49800CE64C3 /* MainMenu.xib */; };
 		F777561D1E10F51B00CE64C3 /* StatusMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F777561C1E10F51B00CE64C3 /* StatusMenuController.swift */; };
-		F777561F1E10F79D00CE64C3 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F777561E1E10F79D00CE64C3 /* Settings.swift */; };
 		F77756211E1105D800CE64C3 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756201E1105D800CE64C3 /* Server.swift */; };
 		F77756241E1107CE00CE64C3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756231E1107CE00CE64C3 /* Extensions.swift */; };
 		F77756281E110FE400CE64C3 /* Torrentino.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756271E110FE400CE64C3 /* Torrentino.swift */; };
@@ -22,6 +21,14 @@
 		F77756321E11155A00CE64C3 /* Torrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756311E11155A00CE64C3 /* Torrent.swift */; };
 		F77756341E11158D00CE64C3 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756331E11158D00CE64C3 /* Genre.swift */; };
 		F77756361E1116C800CE64C3 /* MoviesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756351E1116C800CE64C3 /* MoviesAPI.swift */; };
+		F7ECA0131E12B5C200337A0B /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ECA0111E12B5C200337A0B /* AboutWindowController.swift */; };
+		F7ECA0141E12B5C200337A0B /* AboutWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7ECA0121E12B5C200337A0B /* AboutWindowController.xib */; };
+		F7ECA0161E12BCCD00337A0B /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = F7ECA0151E12BCCD00337A0B /* about.html */; };
+		F7ECA01A1E12C13800337A0B /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = F7ECA0191E12C13800337A0B /* logo.png */; };
+		F7FA29131E1297A900CD5536 /* ParserPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FA29111E1297A900CD5536 /* ParserPreferencesViewController.swift */; };
+		F7FA29141E1297A900CD5536 /* ParserPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7FA29121E1297A900CD5536 /* ParserPreferencesViewController.xib */; };
+		F7FA29171E12982300CD5536 /* ServerPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FA29151E12982300CD5536 /* ServerPreferencesViewController.swift */; };
+		F7FA29181E12982300CD5536 /* ServerPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7FA29161E12982300CD5536 /* ServerPreferencesViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,7 +41,6 @@
 		F77756141E10F49800CE64C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		F77756161E10F49800CE64C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F777561C1E10F51B00CE64C3 /* StatusMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusMenuController.swift; sourceTree = "<group>"; };
-		F777561E1E10F79D00CE64C3 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F77756201E1105D800CE64C3 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		F77756231E1107CE00CE64C3 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F77756271E110FE400CE64C3 /* Torrentino.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torrentino.swift; sourceTree = "<group>"; };
@@ -44,6 +50,14 @@
 		F77756311E11155A00CE64C3 /* Torrent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torrent.swift; sourceTree = "<group>"; };
 		F77756331E11158D00CE64C3 /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		F77756351E1116C800CE64C3 /* MoviesAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesAPI.swift; sourceTree = "<group>"; };
+		F7ECA0111E12B5C200337A0B /* AboutWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutWindowController.swift; sourceTree = "<group>"; };
+		F7ECA0121E12B5C200337A0B /* AboutWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutWindowController.xib; sourceTree = "<group>"; };
+		F7ECA0151E12BCCD00337A0B /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = about.html; sourceTree = "<group>"; };
+		F7ECA0191E12C13800337A0B /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		F7FA29111E1297A900CD5536 /* ParserPreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParserPreferencesViewController.swift; sourceTree = "<group>"; };
+		F7FA29121E1297A900CD5536 /* ParserPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParserPreferencesViewController.xib; sourceTree = "<group>"; };
+		F7FA29151E12982300CD5536 /* ServerPreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerPreferencesViewController.swift; sourceTree = "<group>"; };
+		F7FA29161E12982300CD5536 /* ServerPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ServerPreferencesViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,12 +110,13 @@
 		F777560E1E10F49800CE64C3 /* YTS */ = {
 			isa = PBXGroup;
 			children = (
+				F7FA29191E12B1E700CD5536 /* About */,
+				F7FA29081E12572500CD5536 /* Preferences */,
 				F777562E1E11152F00CE64C3 /* Models */,
 				F77756291E11105E00CE64C3 /* API */,
 				F77756261E110FD000CE64C3 /* Trackers */,
 				F77756221E1107C000CE64C3 /* Helpers */,
 				F77756251E110E6800CE64C3 /* Supporting Files */,
-				F777561E1E10F79D00CE64C3 /* Settings.swift */,
 				F77756201E1105D800CE64C3 /* Server.swift */,
 				F777562C1E11129200CE64C3 /* Parser.swift */,
 				F777561C1E10F51B00CE64C3 /* StatusMenuController.swift */,
@@ -120,6 +135,7 @@
 		F77756251E110E6800CE64C3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F7ECA0191E12C13800337A0B /* logo.png */,
 				F777560F1E10F49800CE64C3 /* AppDelegate.swift */,
 				F77756111E10F49800CE64C3 /* Assets.xcassets */,
 				F77756131E10F49800CE64C3 /* MainMenu.xib */,
@@ -153,6 +169,27 @@
 				F77756331E11158D00CE64C3 /* Genre.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		F7FA29081E12572500CD5536 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				F7FA29111E1297A900CD5536 /* ParserPreferencesViewController.swift */,
+				F7FA29121E1297A900CD5536 /* ParserPreferencesViewController.xib */,
+				F7FA29151E12982300CD5536 /* ServerPreferencesViewController.swift */,
+				F7FA29161E12982300CD5536 /* ServerPreferencesViewController.xib */,
+			);
+			name = Preferences;
+			sourceTree = "<group>";
+		};
+		F7FA29191E12B1E700CD5536 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				F7ECA0111E12B5C200337A0B /* AboutWindowController.swift */,
+				F7ECA0121E12B5C200337A0B /* AboutWindowController.xib */,
+				F7ECA0151E12BCCD00337A0B /* about.html */,
+			);
+			name = About;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,8 +255,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7ECA0161E12BCCD00337A0B /* about.html in Resources */,
+				F7ECA01A1E12C13800337A0B /* logo.png in Resources */,
 				F77756121E10F49800CE64C3 /* Assets.xcassets in Resources */,
+				F7FA29141E1297A900CD5536 /* ParserPreferencesViewController.xib in Resources */,
 				F77756151E10F49800CE64C3 /* MainMenu.xib in Resources */,
+				F7ECA0141E12B5C200337A0B /* AboutWindowController.xib in Resources */,
+				F7FA29181E12982300CD5536 /* ServerPreferencesViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F77756241E1107CE00CE64C3 /* Extensions.swift in Sources */,
-				F777561F1E10F79D00CE64C3 /* Settings.swift in Sources */,
+				F7FA29171E12982300CD5536 /* ServerPreferencesViewController.swift in Sources */,
 				F77756301E11153E00CE64C3 /* Movie.swift in Sources */,
 				F77756341E11158D00CE64C3 /* Genre.swift in Sources */,
 				F777561D1E10F51B00CE64C3 /* StatusMenuController.swift in Sources */,
@@ -290,6 +332,8 @@
 				F77756211E1105D800CE64C3 /* Server.swift in Sources */,
 				F77756101E10F49800CE64C3 /* AppDelegate.swift in Sources */,
 				F77756361E1116C800CE64C3 /* MoviesAPI.swift in Sources */,
+				F7FA29131E1297A900CD5536 /* ParserPreferencesViewController.swift in Sources */,
+				F7ECA0131E12B5C200337A0B /* AboutWindowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

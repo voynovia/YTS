@@ -7,18 +7,21 @@
 //
 
 import Cocoa
+import MASPreferences
 
 class StatusMenuController: NSObject {
     
-    let settings = Settings.sharedInstance
-    let parser = Parser()
+    let parser = Parser.sharedInstance
+    
+    var aboutWindow: AboutWindowController!
+    var preferencesWindowController: MASPreferencesWindowController!
     
     @IBOutlet weak var statusMenu: NSMenu!
     
     let statusItem = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
     
     @IBAction func preferencesClicked(_ sender: Any) {
-    
+        self.preferencesWindowController.showWindow(nil)
     }
     
     @IBOutlet weak var updateLibraries: NSMenuItem!
@@ -45,25 +48,28 @@ class StatusMenuController: NSObject {
     }
     
     @IBAction func checkForUpdatesClicked(_ sender: Any) {
-    
+        print("check for update")
     }
     
     @IBAction func aboutClicked(_ sender: Any) {
-    
+        aboutWindow.showWindow(nil)
     }
     
     @IBAction func quitClicked(_ sender: Any) {
-        settings.save() // save settings
         NSApplication.shared().terminate(self)
     }
     
     override func awakeFromNib() {
-        // Insert code here to initialize your application
         
-//        Realm.Configuration.defaultConfiguration.deleteRealmIfMigrationNeeded = true
-//        print("Realm Path : \(Realm.Configuration.defaultConfiguration.fileURL!.absoluteURL)")
+        aboutWindow = AboutWindowController()
         
-        let server = Server()
+        // Set preferences window
+        var controllers = [NSViewController]()
+        controllers.append(ServerPreferencesViewController())
+        controllers.append(ParserPreferencesViewController())
+        preferencesWindowController = MASPreferencesWindowController.init(viewControllers: controllers, title: "Preferences")
+        
+        let server = Server.sharedInstance
         server.start()
         
         let icon = NSImage(named: "tray-off")

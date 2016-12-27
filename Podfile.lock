@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (4.2.0)
   - Kanna (2.1.1)
+  - MASPreferences (1.2)
   - Realm (2.1.1):
     - Realm/Headers (= 2.1.1)
   - Realm/Headers (2.1.1)
@@ -11,16 +12,27 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 4.0)
   - Kanna (~> 2.1.0)
+  - MASPreferences (from `https://github.com/shpakovski/MASPreferences`)
   - RealmSwift (~> 2.1)
   - Swifter (~> 1.3.2)
+
+EXTERNAL SOURCES:
+  MASPreferences:
+    :git: https://github.com/shpakovski/MASPreferences
+
+CHECKOUT OPTIONS:
+  MASPreferences:
+    :commit: d0c45f3848d1d9bade4cb513312ee9aad0cfe32f
+    :git: https://github.com/shpakovski/MASPreferences
 
 SPEC CHECKSUMS:
   Alamofire: aa2e09d871c9160ac53c90e83c68064a94e3dfbe
   Kanna: 9b4b086c218703f2b94f5b21a466217dd2f9332e
+  MASPreferences: 4ff5ced14f2ae0aada927579816c07fa6840f2e8
   Realm: a55959c0b171a5fe5267406d17f314fec3cefaae
   RealmSwift: 749fd955bf8d6471c21d218b9389a47aaeccfe3f
   Swifter: dd1800ba8eb3e28b22b8bd20f91a8561a0110fac
 
-PODFILE CHECKSUM: e397dd0b93a30f9031b642027ce830d23a000143
+PODFILE CHECKSUM: 49fbadcf8b4f8e70820781f390e07a5984a86062
 
 COCOAPODS: 1.1.1

@@ -15,43 +15,38 @@ enum ParseOperation {
 
 class Parser {
     
+    static let sharedInstance: Parser = {
+        let instance = Parser()
+        return instance
+    }()
+    
+    private let settings = UserDefaults.standard
+    
     private let tracker = Torrentino()
     
-    private let settings = Settings.sharedInstance
-
     private var parsePage = 1 // the initial page for processing
-    private var parseDelay = 5.0 // the delay between the processing
     private var links = [String]() // links to movies
     
     private var stop = false { didSet { if stop { links.removeAll() } } }
     
     init() {
-        if let parseUpdate = settings.getValue(key: "parseUpdate") as? Date,
-            let parsePage = settings.getValue(key: "parsePage") as? Int,
-            let parseDelay = settings.getValue(key: "parseDelay") as? Double {
-            
-            self.parsePage = parsePage
-            self.parseDelay = parseDelay
-            
-            let hoursCount = Calendar.current.dateComponents([.hour], from: parseUpdate, to: Date()).hour ?? 0
+        if let lastdate = settings.object(forKey: "parseUpdate") as? Date {
+            let hoursCount = Calendar.current.dateComponents([.hour], from: lastdate, to: Date()).hour ?? 0
             if hoursCount > 24 {
-                settings.setValue(key: "parseUpdate", value: Date())
-                settings.setValue(key: "parsePage", value: 1)
+                settings.set(Date(), forKey: "parseUpdate")
+                settings.set(1, forKey: "parsePage")
             }
-        } else {
-            settings.setValue(key: "parseUpdate", value: Date())
-            settings.setValue(key: "parsePage", value: self.parsePage)
-            settings.setValue(key: "parseDelay", value: self.parseDelay)
         }
+        self.parsePage = settings.integer(forKey: "parsePage")
     }
     
     public func startParsing(slow: Bool = true) {
-        settings.setValue(key: "parsePage", value: self.parsePage) // save the number of the processed page
+        settings.setValue(self.parsePage, forKey: "parsePage") // save the number of the processed page
         let link = tracker.moviesPage + "&page=\(self.parsePage)"
         if slow {
-            self.requestSlow(url: link, operation: .All, delay: parseDelay)
+            self.requestSlow(url: link, operation: .All)
         } else {
-            
+            // TODO: fast parsing
         }
     }
     
@@ -59,11 +54,13 @@ class Parser {
         self.stop = true
     }
     
-    private func requestSlow(url: String, operation: ParseOperation, delay: Double) {
+    private func requestSlow(url: String, operation: ParseOperation) {
         var url = url
         if !url.contains(tracker.domain) {
             url = tracker.domain + url
         }
+        let delay = settings.double(forKey: "parseDelay") // the delay may change
+        print(url, " with delay:", delay)
         Alamofire.request(url).responseData { response in
             switch response.result {
             case .success:
@@ -84,7 +81,7 @@ class Parser {
                             return
                         }
                         if self.links.count > 0 {
-                            self.requestSlow(url: self.links[0], operation: .One, delay: delay)
+                            self.requestSlow(url: self.links[0], operation: .One)
                             self.links.remove(at: 0)
                         } else {
                             self.parsePage += 1

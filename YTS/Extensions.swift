@@ -75,8 +75,8 @@ extension Dictionary {
 extension RealmSwift.Results {
     func toDictionary() -> [[String: Any]] {
         var objects = [[String: Any]]()
-        for i in 0..<self.count {
-            objects.append(self[i].toDictionary())
+        for object in self {
+            objects.append(object.toDictionary())
         }
         return objects
     }

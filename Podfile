@@ -7,6 +7,7 @@ target 'YTS' do
     pod 'Kanna', '~> 2.1.0'
     pod 'RealmSwift', '~> 2.1'
     pod 'Swifter', '~> 1.3.2'
+    pod 'MASPreferences', :git => 'https://github.com/shpakovski/MASPreferences'
 end
 
 post_install do |installer|

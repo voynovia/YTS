@@ -11,39 +11,34 @@ import Swifter
 
 class Server {
     
-    let server = HttpServer()
-    let moviesAPI = MoviesAPI()
+    static let sharedInstance: Server = {
+        let instance = Server()
+        return instance
+    }()
     
+    private let server = HttpServer()
+    private let moviesAPI = MoviesAPI()
+    
+    private let settings = UserDefaults.standard
+        
     public func start() {
         self.startServer()
         self.startAPI()
     }
     
     private func startAPI() {
-        if server.state != .running {
-            print("Waiting for the server")
+        while server.state != .running {
+            print("Waiting for the server start")
             Timer.scheduledTimer(withTimeInterval: TimeInterval(0.5), repeats: false, block: { _ in self.startAPI() })
-        } else {
-            self.startMovieAPI()
-            self.startShowAPI()
         }
+        self.startMovieAPI()
+        self.startShowAPI()
     }
     
     private func startServer() {
-        
-        let settings = Settings.sharedInstance
-        
-        var port: UInt16 = 3000
-        
-        if let portValue = settings.getValue(key: "serverPort") as? UInt16 {
-            port = portValue
-        } else {
-            settings.setValue(key: "serverPort", value: port)
-        }
-        
         if #available(OSXApplicationExtension 10.10, *) {
             do {
-                try server.start(port, forceIPv4: true)
+                try server.start(UInt16(settings.integer(forKey: "serverPort")), forceIPv4: true)
                 print("Server has started ( port = \(try server.port()) ). Try to connect now...")
             } catch {
                 print("Server start error: \(error)")
@@ -52,7 +47,19 @@ class Server {
         } else {
             print("OS not supported")
         }
-        
+    }
+    
+    public func stop() {
+        server.stop()
+    }
+    
+    public func restart() {
+        server.stop()
+        while server.state != .stopped {
+            print("Waiting for the server stop")
+            Timer.scheduledTimer(withTimeInterval: TimeInterval(0.5), repeats: false, block: { _ in self.restart() })
+        }
+        self.start()
     }
     
     private func startMovieAPI() {
