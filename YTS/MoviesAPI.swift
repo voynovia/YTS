@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 class MoviesAPI {
     
@@ -37,18 +36,22 @@ class MoviesAPI {
     }
     
     private var sortOperations: [Sort: Operation] = [
-        Sort.date_added: Operation.Sorting({ $0.id > $1.id }),
-        Sort.rating: Operation.Sorting({ $0.rating > $1.rating }),
         Sort.title: Operation.Sorting({ $0.title < $1.title }),
-        Sort.year: Operation.Sorting({ $0.year > $1.year })
+        Sort.year: Operation.Sorting({ $0.year > $1.year }),
+        Sort.rating: Operation.Sorting({ $0.rating > $1.rating }),
+//        Sort.peers: Operation.Sorting({ }),
+//        Sort.seeds: Operation.Sorting({ }),
+//        Sort.download_count: Operation.Sorting({ }),
+//        Sort.like_count: Operation.Sorting({ }),
+        Sort.date_added: Operation.Sorting({ $0.id > $1.id }),
     ]
     
     // List Movies
     func moviesInfo(params: Params) -> [String: Any] {
         
-        let realm = try! Realm()
-        var objects = Array(realm.objects(Movie.self))
-
+        let database = DataBase()
+        var objects = Array(database.getObjects(type: Movie.self))
+        
         if let genreParam = params.genre {
             objects = Array(objects.filter({$0.genres.contains(where: {$0.name == genreParam})}))
         }
@@ -88,12 +91,21 @@ class MoviesAPI {
     // Movie Details
     
     func detailInfo(id: Int) -> [String: Any] {
-        let realm = try! Realm()
-        if let movie = realm.objects(Movie.self).first(where: {$0.id == id}) {
+
+        let database = DataBase()        
+        if let movie = database.getObjects(type: Movie.self).first(where: {$0.id == id}) {
             
             var data = movie.toDictionary()
-            data.changeKey(from: "_hash", to: "hash")
             
+            // change torrents key
+            var torrents = data["torrents"] as! [[String: Any]]
+            for i in 0..<torrents.count {
+                torrents[i].changeKey(from: "_hash", to: "hash")
+            }
+            data.removeValue(forKey: "torrents")
+            data["torrents"] = torrents
+            
+            // change genres key
             var genres = [String] ()
             for genre in movie.genres {
                 genres.append(genre.name)

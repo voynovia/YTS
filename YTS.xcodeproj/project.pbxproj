@@ -8,12 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		11375E1007CB07BE6BE2C692 /* Pods_YTS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B70731C98F6C8AB1E94FEFF8 /* Pods_YTS.framework */; };
+		F70EBD551E15822400ACC80F /* DataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70EBD541E15822400ACC80F /* DataBase.swift */; };
+		F70EBD581E1696A200ACC80F /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70EBD571E1696A200ACC80F /* String+Extensions.swift */; };
+		F70EBD5A1E1696C400ACC80F /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70EBD591E1696C400ACC80F /* Dictionary+Extensions.swift */; };
+		F70EBD5C1E1697A600ACC80F /* NSAlert+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70EBD5B1E1697A600ACC80F /* NSAlert+Extensions.swift */; };
 		F77756101E10F49800CE64C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F777560F1E10F49800CE64C3 /* AppDelegate.swift */; };
 		F77756121E10F49800CE64C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F77756111E10F49800CE64C3 /* Assets.xcassets */; };
 		F77756151E10F49800CE64C3 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F77756131E10F49800CE64C3 /* MainMenu.xib */; };
 		F777561D1E10F51B00CE64C3 /* StatusMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F777561C1E10F51B00CE64C3 /* StatusMenuController.swift */; };
 		F77756211E1105D800CE64C3 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756201E1105D800CE64C3 /* Server.swift */; };
-		F77756241E1107CE00CE64C3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756231E1107CE00CE64C3 /* Extensions.swift */; };
+		F77756241E1107CE00CE64C3 /* DispatchQueue+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756231E1107CE00CE64C3 /* DispatchQueue+Extensions.swift */; };
 		F77756281E110FE400CE64C3 /* Torrentino.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756271E110FE400CE64C3 /* Torrentino.swift */; };
 		F777562B1E11107B00CE64C3 /* EnumsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F777562A1E11107B00CE64C3 /* EnumsAPI.swift */; };
 		F777562D1E11129200CE64C3 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F777562C1E11129200CE64C3 /* Parser.swift */; };
@@ -21,6 +25,8 @@
 		F77756321E11155A00CE64C3 /* Torrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756311E11155A00CE64C3 /* Torrent.swift */; };
 		F77756341E11158D00CE64C3 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756331E11158D00CE64C3 /* Genre.swift */; };
 		F77756361E1116C800CE64C3 /* MoviesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77756351E1116C800CE64C3 /* MoviesAPI.swift */; };
+		F7AEAB931E13E9C300B9E0C3 /* Realm+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AEAB921E13E9C300B9E0C3 /* Realm+Extensions.swift */; };
+		F7AEAB961E13ECEF00B9E0C3 /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AEAB951E13ECEF00B9E0C3 /* InformationView.swift */; };
 		F7ECA0131E12B5C200337A0B /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7ECA0111E12B5C200337A0B /* AboutWindowController.swift */; };
 		F7ECA0141E12B5C200337A0B /* AboutWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7ECA0121E12B5C200337A0B /* AboutWindowController.xib */; };
 		F7ECA0161E12BCCD00337A0B /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = F7ECA0151E12BCCD00337A0B /* about.html */; };
@@ -35,6 +41,10 @@
 		B70731C98F6C8AB1E94FEFF8 /* Pods_YTS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YTS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C273B8791CF7D39B4B42AF54 /* Pods-YTS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YTS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YTS/Pods-YTS.debug.xcconfig"; sourceTree = "<group>"; };
 		C32C206F283B7735D4BB1AFB /* Pods-YTS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YTS.release.xcconfig"; path = "Pods/Target Support Files/Pods-YTS/Pods-YTS.release.xcconfig"; sourceTree = "<group>"; };
+		F70EBD541E15822400ACC80F /* DataBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBase.swift; sourceTree = "<group>"; };
+		F70EBD571E1696A200ACC80F /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		F70EBD591E1696C400ACC80F /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
+		F70EBD5B1E1697A600ACC80F /* NSAlert+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAlert+Extensions.swift"; sourceTree = "<group>"; };
 		F777560C1E10F49800CE64C3 /* YTS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YTS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F777560F1E10F49800CE64C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F77756111E10F49800CE64C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -42,7 +52,7 @@
 		F77756161E10F49800CE64C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F777561C1E10F51B00CE64C3 /* StatusMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusMenuController.swift; sourceTree = "<group>"; };
 		F77756201E1105D800CE64C3 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
-		F77756231E1107CE00CE64C3 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		F77756231E1107CE00CE64C3 /* DispatchQueue+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Extensions.swift"; sourceTree = "<group>"; };
 		F77756271E110FE400CE64C3 /* Torrentino.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torrentino.swift; sourceTree = "<group>"; };
 		F777562A1E11107B00CE64C3 /* EnumsAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumsAPI.swift; sourceTree = "<group>"; };
 		F777562C1E11129200CE64C3 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -50,6 +60,8 @@
 		F77756311E11155A00CE64C3 /* Torrent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torrent.swift; sourceTree = "<group>"; };
 		F77756331E11158D00CE64C3 /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		F77756351E1116C800CE64C3 /* MoviesAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesAPI.swift; sourceTree = "<group>"; };
+		F7AEAB921E13E9C300B9E0C3 /* Realm+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Realm+Extensions.swift"; sourceTree = "<group>"; };
+		F7AEAB951E13ECEF00B9E0C3 /* InformationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		F7ECA0111E12B5C200337A0B /* AboutWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutWindowController.swift; sourceTree = "<group>"; };
 		F7ECA0121E12B5C200337A0B /* AboutWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutWindowController.xib; sourceTree = "<group>"; };
 		F7ECA0151E12BCCD00337A0B /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = about.html; sourceTree = "<group>"; };
@@ -89,6 +101,43 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		F70EBD511E157B8700ACC80F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F7FA29081E12572500CD5536 /* Preferences */,
+				F7FA29191E12B1E700CD5536 /* About */,
+				F7AEAB941E13ECAC00B9E0C3 /* Menu */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		F70EBD521E157BA800ACC80F /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				F77756201E1105D800CE64C3 /* Server.swift */,
+				F77756291E11105E00CE64C3 /* API */,
+			);
+			name = Server;
+			sourceTree = "<group>";
+		};
+		F70EBD531E157C1000ACC80F /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				F777562C1E11129200CE64C3 /* Parser.swift */,
+				F77756261E110FD000CE64C3 /* Trackers */,
+			);
+			name = Parser;
+			sourceTree = "<group>";
+		};
+		F70EBD561E15822F00ACC80F /* DataBase */ = {
+			isa = PBXGroup;
+			children = (
+				F70EBD541E15822400ACC80F /* DataBase.swift */,
+				F777562E1E11152F00CE64C3 /* Models */,
+			);
+			name = DataBase;
+			sourceTree = "<group>";
+		};
 		F77756031E10F49800CE64C3 = {
 			isa = PBXGroup;
 			children = (
@@ -110,16 +159,12 @@
 		F777560E1E10F49800CE64C3 /* YTS */ = {
 			isa = PBXGroup;
 			children = (
-				F7FA29191E12B1E700CD5536 /* About */,
-				F7FA29081E12572500CD5536 /* Preferences */,
-				F777562E1E11152F00CE64C3 /* Models */,
-				F77756291E11105E00CE64C3 /* API */,
-				F77756261E110FD000CE64C3 /* Trackers */,
+				F70EBD511E157B8700ACC80F /* Views */,
+				F70EBD521E157BA800ACC80F /* Server */,
+				F70EBD561E15822F00ACC80F /* DataBase */,
+				F70EBD531E157C1000ACC80F /* Parser */,
 				F77756221E1107C000CE64C3 /* Helpers */,
 				F77756251E110E6800CE64C3 /* Supporting Files */,
-				F77756201E1105D800CE64C3 /* Server.swift */,
-				F777562C1E11129200CE64C3 /* Parser.swift */,
-				F777561C1E10F51B00CE64C3 /* StatusMenuController.swift */,
 			);
 			path = YTS;
 			sourceTree = "<group>";
@@ -127,7 +172,11 @@
 		F77756221E1107C000CE64C3 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				F77756231E1107CE00CE64C3 /* Extensions.swift */,
+				F70EBD571E1696A200ACC80F /* String+Extensions.swift */,
+				F70EBD591E1696C400ACC80F /* Dictionary+Extensions.swift */,
+				F77756231E1107CE00CE64C3 /* DispatchQueue+Extensions.swift */,
+				F7AEAB921E13E9C300B9E0C3 /* Realm+Extensions.swift */,
+				F70EBD5B1E1697A600ACC80F /* NSAlert+Extensions.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -135,10 +184,8 @@
 		F77756251E110E6800CE64C3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				F7ECA0191E12C13800337A0B /* logo.png */,
 				F777560F1E10F49800CE64C3 /* AppDelegate.swift */,
 				F77756111E10F49800CE64C3 /* Assets.xcassets */,
-				F77756131E10F49800CE64C3 /* MainMenu.xib */,
 				F77756161E10F49800CE64C3 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -171,6 +218,16 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		F7AEAB941E13ECAC00B9E0C3 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				F777561C1E10F51B00CE64C3 /* StatusMenuController.swift */,
+				F77756131E10F49800CE64C3 /* MainMenu.xib */,
+				F7AEAB951E13ECEF00B9E0C3 /* InformationView.swift */,
+			);
+			name = Menu;
+			sourceTree = "<group>";
+		};
 		F7FA29081E12572500CD5536 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,6 +245,7 @@
 				F7ECA0111E12B5C200337A0B /* AboutWindowController.swift */,
 				F7ECA0121E12B5C200337A0B /* AboutWindowController.xib */,
 				F7ECA0151E12BCCD00337A0B /* about.html */,
+				F7ECA0191E12C13800337A0B /* logo.png */,
 			);
 			name = About;
 			sourceTree = "<group>";
@@ -320,16 +378,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F77756241E1107CE00CE64C3 /* Extensions.swift in Sources */,
+				F77756241E1107CE00CE64C3 /* DispatchQueue+Extensions.swift in Sources */,
+				F7AEAB961E13ECEF00B9E0C3 /* InformationView.swift in Sources */,
+				F70EBD5A1E1696C400ACC80F /* Dictionary+Extensions.swift in Sources */,
 				F7FA29171E12982300CD5536 /* ServerPreferencesViewController.swift in Sources */,
 				F77756301E11153E00CE64C3 /* Movie.swift in Sources */,
+				F70EBD581E1696A200ACC80F /* String+Extensions.swift in Sources */,
+				F70EBD551E15822400ACC80F /* DataBase.swift in Sources */,
 				F77756341E11158D00CE64C3 /* Genre.swift in Sources */,
+				F7AEAB931E13E9C300B9E0C3 /* Realm+Extensions.swift in Sources */,
 				F777561D1E10F51B00CE64C3 /* StatusMenuController.swift in Sources */,
 				F77756321E11155A00CE64C3 /* Torrent.swift in Sources */,
 				F77756281E110FE400CE64C3 /* Torrentino.swift in Sources */,
 				F777562D1E11129200CE64C3 /* Parser.swift in Sources */,
 				F777562B1E11107B00CE64C3 /* EnumsAPI.swift in Sources */,
 				F77756211E1105D800CE64C3 /* Server.swift in Sources */,
+				F70EBD5C1E1697A600ACC80F /* NSAlert+Extensions.swift in Sources */,
 				F77756101E10F49800CE64C3 /* AppDelegate.swift in Sources */,
 				F77756361E1116C800CE64C3 /* MoviesAPI.swift in Sources */,
 				F7FA29131E1297A900CD5536 /* ParserPreferencesViewController.swift in Sources */,

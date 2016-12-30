@@ -9,6 +9,24 @@
 import Foundation
 import Swifter
 
+protocol ServerDelegate {
+    func serverStateDidUpdate(running: Bool)
+    func serverFailure(error: ServerError)
+}
+
+enum ServerError: Error {
+    case OSNotSupported, NoStart
+    
+    var localizedDescription: String {
+        switch self {
+        case .OSNotSupported:
+            return "OS not supported"
+        case .NoStart:
+            return "Server could not be started"
+        }
+    }
+}
+
 class Server {
     
     static let sharedInstance: Server = {
@@ -16,53 +34,59 @@ class Server {
         return instance
     }()
     
+    var delegate: ServerDelegate?
+    
     private let server = HttpServer()
     private let moviesAPI = MoviesAPI()
     
     private let settings = UserDefaults.standard
-        
+    
     public func start() {
-        self.startServer()
-        self.startAPI()
-    }
-    
-    private func startAPI() {
-        while server.state != .running {
-            print("Waiting for the server start")
-            Timer.scheduledTimer(withTimeInterval: TimeInterval(0.5), repeats: false, block: { _ in self.startAPI() })
-        }
-        self.startMovieAPI()
-        self.startShowAPI()
-    }
-    
-    private func startServer() {
         if #available(OSXApplicationExtension 10.10, *) {
             do {
-                try server.start(UInt16(settings.integer(forKey: "serverPort")), forceIPv4: true)
-                print("Server has started ( port = \(try server.port()) ). Try to connect now...")
+                try self.server.start(UInt16(settings.integer(forKey: "serverPort")), forceIPv4: true)
+                self.afterStart()
             } catch {
-                print("Server start error: \(error)")
+                self.delegate?.serverFailure(error: ServerError.NoStart)
             }
-
         } else {
-            print("OS not supported")
+            self.delegate?.serverFailure(error: ServerError.OSNotSupported)
+        }
+    }
+    
+    private func afterStart() {
+        if self.server.state != .running {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in
+                self.afterStart()
+            })
+        } else {
+            self.delegate?.serverStateDidUpdate(running: true)
+            self.startMoviesAPI()
+            self.startShowsAPI()
         }
     }
     
     public func stop() {
-        server.stop()
+        self.server.stop()
+        self.afterStop()
+    }
+    
+    private func afterStop() {
+        if server.state != .stopped {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in
+                self.afterStop()
+            })
+        } else {
+            delegate?.serverStateDidUpdate(running: false)
+        }
     }
     
     public func restart() {
-        server.stop()
-        while server.state != .stopped {
-            print("Waiting for the server stop")
-            Timer.scheduledTimer(withTimeInterval: TimeInterval(0.5), repeats: false, block: { _ in self.restart() })
-        }
+        self.stop()
         self.start()
     }
     
-    private func startMovieAPI() {
+    private func startMoviesAPI() {
         
         // List Movies
         self.server["/api/v2/list_movies.json"] = { r in
@@ -118,7 +142,7 @@ class Server {
         }
     }
     
-    private func startShowAPI() {
+    private func startShowsAPI() {
         
     }
 }

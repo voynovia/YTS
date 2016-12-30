@@ -8,15 +8,13 @@
 
 import Foundation
 import Kanna
-import RealmSwift
 
 class Torrentino {
 
     var encoding: String.Encoding = .utf8
     
     let domain: String = "http://www.torrentino.me"
-    let moviesPage: String = "http://www.torrentino.me/movies?quality=hq"
-    let movieLink: String = "section div.plate div.tiles div.tile a"
+    let moviesPage: String = "http://www.torrentino.me/movies?quality=hq&page="
     
     var genres: [GenreAPI: [String]] = [
         .All: ["Все"],
@@ -45,15 +43,14 @@ class Torrentino {
         .Western: ["вестерн"]
     ]
     
-    enum Sort: String {
-        case date, rating, popularity
-        static let values = [date, rating, popularity]
-    }
+    var audio = ["iTunes", "Лицензия", "Дублированный"]
+    
+    var sort = ["date", "rating", "popularity"]
     
     func parsePage(html: String) -> [String] {
         var links = [String]()
         if let doc = Kanna.HTML(html: html, encoding: encoding) {
-            for item in doc.css(movieLink) {
+            for item in doc.css("section div.plate div.tiles div.tile a") {
                 links.append(item["href"]!)
             }
         }
@@ -61,59 +58,54 @@ class Torrentino {
     }
     
     func parseMovie(html: String, url: String) {
-        
-        if let doc = Kanna.HTML(html: html, encoding: encoding) {
             
-            let realm = try! Realm()
-            realm.beginWrite()
+        if let doc = Kanna.HTML(html: html, encoding: encoding) {
+
+            var torrents = [Torrent]()
+            var genres = [Genre]()
             
             let movie = Movie()
-            movie.id = Int(url.slice(from: "/", to: "-")!)!
-            movie.url = url
+            movie.id = Int(url.between(from: "/", to: "-")!)!
             movie.imdb_code = String(movie.id)
             movie.slug = url.toEnd(from: "-")
             
             // Add Files Information
             // ------------------------
-            var addedFiles = false
-            
             var need1080 = true
             var need720 = true
-            var currentQuality = QualityAPI.p1080
+            var currentQuality = QualityAPI.p720
             var adding = false
             if let list = doc.at_css("div.main div.entity div.list-start table.quality") {
                 for item in list.css("tr.item") {
-                    if let quality = item.at_css("td.video")?.text, let languages = item.at_css("td.languages")?.text {
+                    if let qualityText = item.at_css("td.video")?.text,
+                        let audioText = item.at_css("td.audio")?.text?.trim() {
                         
-                        if quality.contains("1920") && need1080 && languages.contains("ru") {
+                        if qualityText.contains("1920") && need1080 && audio.contains(audioText) {
                             currentQuality = QualityAPI.p1080
                             adding = true
                             need1080 = false
-                        } else if quality.contains("720") && need720 && languages.contains("ru") {
+                        } else if qualityText.contains("720") && need720 && audio.contains(audioText) {
                             currentQuality = QualityAPI.p720
                             adding = true
                             need720 = false
                         }
+                        
                         if adding {
                             let torrent = Torrent()
                             torrent.idMovie = movie.id
                             torrent.qualityEnum = currentQuality
-                            if let sizeString = item.at_css("td.size")?.text! {
-                                torrent.size = sizeString.contains("ГБ") ? sizeString.digitsWithDot + " GB" : sizeString.digitsWithDot + " MB"
-                                torrent.size_bytes = String(describing: Double(sizeString.digitsWithDot)! * 1000000000)
+                            if let sizeString = item.at_css("td.size")?.text, let size = sizeString.toDouble {
+                                torrent.size = sizeString.contains("ГБ") ? String(describing: size) + " GB" : String(describing: size) + " MB"
+                                torrent.size_bytes = String(Int(size) * 1000000000)
                             }
-                            torrent.date_uploaded = item.at_css("td.updated")?.text!.changeDateFormat(from: "dd.MM.yyyy", to: "yyyy-MM-dd HH:mm:ss")
-                            torrent.date_uploaded_unix = torrent.date_uploaded?.toUnixTime(from: "yyyy-MM-dd HH:mm:ss")
-                            torrent.seeds = Int((item.at_css("td.seed-leech span.seed")?.text)!)!
-                            torrent.peers = Int((item.at_css("td.seed-leech span.leech")?.text)!)!
-                            let magnet = item.at_css("td.download a[data-default^=magnet]")?["data-default"]!
-                            torrent.url = magnet
-                            torrent._hash = magnet?.slice(from: "btih:", to: "&")
+                            torrent.date_uploaded = item.at_css("td.updated")?.text?.changeDateFormat(fromFormat: "dd.MM.yyyy", toFormat: "yyyy-MM-dd HH:mm:ss")
+                            torrent.date_uploaded_unix = torrent.date_uploaded?.toUnixTime(format: "yyyy-MM-dd HH:mm:ss") ?? 0.0
+                            torrent.seeds = item.at_css("td.seed-leech span.seed")?.text?.toInteger ?? 0
+                            torrent.peers = item.at_css("td.seed-leech span.leech")?.text?.toInteger ?? 0
+                            torrent.url = item.at_css("td.download a[data-type=download]")?["data-torrent"]
+                            torrent._hash = item.at_css("td.download a[data-type=download]")?["data-default"]?.between(from: "btih:", to: "&")
                             
-                            realm.add(torrent, update: true)
-                            movie.torrents.append(torrent)
-                            
-                            addedFiles = true
+                            torrents.append(torrent)
                             
                             adding = false
                         }
@@ -124,35 +116,63 @@ class Torrentino {
             // Add Movie Information
             // ------------------------
             
-            if addedFiles {
+            if torrents.count > 0 {
                 if let head = doc.at_css("div.main div.entity div.head-plate") {
+                    
                     movie.title = head.at_css("h1[itemprop='name']")?.text
-                    movie.title_long = head.at_css("h2[itemprop='alternateName']")?.text
-                    movie.year = Int((head.at_css("td[itemprop='copyrightYear']")?.text)!)!
-                    if let rating = head.at_css("meta[itemprop='ratingValue']")?["content"] {
-                        movie.rating = Double(rating)!
+                    movie.year = head.at_css("td[itemprop='copyrightYear']")?.text?.toInteger ?? 2000
+                    movie.rating = head.at_css("meta[itemprop='ratingValue']")?["content"]?.toDouble ?? 0.0
+                    if let runtime = head.at_css("td[itemprop='duration']")?["datetime"] {
+                        if let hours = runtime.between(from: "PT", to: "H")?.toInteger,
+                            let minutes = runtime.between(from: "H", to: "M")?.toInteger {
+                            movie.runtime = hours * 60 + minutes
+                        }
                     }
                     movie.small_cover_image = "https://st.kp.yandex.net/images/film_iphone/iphone360_"+String(movie.id)+".jpg"
                     movie.medium_cover_image = "https://st.kp.yandex.net/images/film_big/"+String(movie.id)+".jpg"
-                    let synopsis = head.xpath("//div[@class='specialty']/text()")[1].text!.trim()
-                    movie.synopsis = synopsis.isEmpty ? head.at_css("div.specialty p")?.text : synopsis
-                    movie.trailer = nil
+                    let synopsis = head.xpath("//div[@class='specialty']/text()")[1].text?.trim()
+                    movie.synopsis = synopsis != nil ? head.at_css("div.specialty p")?.text : synopsis
+                    movie.yt_trailer_code = nil
+            
                     for item in head.css("a[href*=genres]") {
                         let name = (item["href"]?.toEnd(from: "="))!
-                        if let genreYts = genres.first(where: { $0.value.contains(name)}) {
+                        if let genreYts = self.genres.first(where: { $0.value.contains(name)}) {
                             let genre = Genre()
                             genre.name = (genreYts.key.rawValue)
-                            realm.add(genre, update: true)
-                            movie.genres.append(genre)
+                            genres.append(genre)
                         } else {
                             print("Для", name, "нет соответствия")
                         }
                     }
+                    
                 }
-                realm.add(movie, update: true)
+                
+                // save in database
+                let database = DataBase()
+                database.executeInTransaction(execute: {
+                
+                    database.updateInTransaction(object: movie)
+                    
+                    for torrent in torrents {
+                        database.updateInTransaction(object: torrent)
+                        movie.torrents.append(torrent)
+                    }
+                    
+                    if genres.count > 0 {
+                        for genre in genres {
+                            database.updateInTransaction(object: genre)
+                            movie.genres.append(genre)
+                        }
+                    } else {
+                        let genre = Genre()
+                        genre.name = GenreAPI.All.rawValue
+                        movie.genres.append(genre)
+                    }
+                    
+                })
+                
             }
             
-            try! realm.commitWrite()
         }
         
     }

@@ -13,6 +13,11 @@ enum ParseOperation {
     case All, One
 }
 
+protocol ParserDelegate {
+    func updateCount()
+    func parserFailure(error: Error)
+}
+
 class Parser {
     
     static let sharedInstance: Parser = {
@@ -20,29 +25,62 @@ class Parser {
         return instance
     }()
     
+    var delegate: ParserDelegate?
+    
     private let settings = UserDefaults.standard
     
     private let tracker = Torrentino()
     
-    private var parsePage = 1 // the initial page for processing
     private var links = [String]() // links to movies
+    private var parsingPage: Int = 1
     
-    private var stop = false { didSet { if stop { links.removeAll() } } }
     
-    init() {
-        if let lastdate = settings.object(forKey: "parseUpdate") as? Date {
-            let hoursCount = Calendar.current.dateComponents([.hour], from: lastdate, to: Date()).hour ?? 0
-            if hoursCount > 24 {
-                settings.set(Date(), forKey: "parseUpdate")
-                settings.set(1, forKey: "parsePage")
+    private var stop = false {
+        didSet {
+            if stop {
+                links.removeAll()
+            } else if self.clean {
+                let database = DataBase()
+                database.deleteAll()
+                self.resetSettings()
+                self.clean = false
+                self.delegate?.updateCount()
             }
         }
-        self.parsePage = settings.integer(forKey: "parsePage")
+    }
+    private var clean = false
+    
+    private var running = false
+    
+    public func cleanBase() {
+        if running {
+            self.stopParsing()
+            self.clean = true
+        } else {
+            let database = DataBase()
+            database.deleteAll()
+            self.resetSettings()
+            self.delegate?.updateCount()
+        }
+    }
+    
+    private func resetSettings() {
+        settings.set(Date(), forKey: "parseUpdate")
+        settings.set(1, forKey: "parsePage")
     }
     
     public func startParsing(slow: Bool = true) {
-        settings.setValue(self.parsePage, forKey: "parsePage") // save the number of the processed page
-        let link = tracker.moviesPage + "&page=\(self.parsePage)"
+        self.running = true
+        
+        if let lastdate = settings.object(forKey: "parseUpdate") as? Date {
+            let hoursCount = Calendar.current.dateComponents([.hour], from: lastdate, to: Date()).hour ?? 0
+            if hoursCount > 24 {
+                self.resetSettings()
+            }
+        }
+        self.parsingPage = self.settings.integer(forKey: "parsePage")
+        
+        let link = tracker.moviesPage + String(parsingPage)
         if slow {
             self.requestSlow(url: link, operation: .All)
         } else {
@@ -59,8 +97,8 @@ class Parser {
         if !url.contains(tracker.domain) {
             url = tracker.domain + url
         }
+        print(url)
         let delay = settings.double(forKey: "parseDelay") // the delay may change
-        print(url, " with delay:", delay)
         Alamofire.request(url).responseData { response in
             switch response.result {
             case .success:
@@ -74,23 +112,23 @@ class Parser {
                             self.tracker.parseMovie(html: text, url: url)
                         }
                     }, completion: {
-                        print("parsed: \(url)")
                         if self.stop {
-                            print("stop parsing")
+                            self.running = false
                             self.stop = false
                             return
                         }
                         if self.links.count > 0 {
                             self.requestSlow(url: self.links[0], operation: .One)
                             self.links.remove(at: 0)
+                            self.delegate?.updateCount()
                         } else {
-                            self.parsePage += 1
+                            self.settings.setValue(self.parsingPage + 1, forKey: "parsePage") // save new number of the processed page
                             self.startParsing(slow: true)
                         }
                     })
                 }
             case .failure(let error):
-                print("\(url) is failure: \(error)")
+                self.delegate?.parserFailure(error: error)
             }
         }
     }

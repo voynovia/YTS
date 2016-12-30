@@ -20,7 +20,7 @@ class Torrent: Object {
     dynamic var size: String?
     dynamic var size_bytes: String?
     dynamic var date_uploaded: String?
-    dynamic var date_uploaded_unix: String?
+    dynamic var date_uploaded_unix: Double = 0.0
     
     var qualityEnum: QualityAPI {
         get {
