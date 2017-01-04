@@ -9,12 +9,23 @@
 import Foundation
 import Kanna
 
+protocol TrackerDelegate {
+    func requestFast(url: String, operation: ParseOperation)
+    func parsedPage()
+}
+
 class Torrentino {
 
+    var delegate: TrackerDelegate!
+    
     var encoding: String.Encoding = .utf8
     
     let domain: String = "http://www.torrentino.me"
     let moviesPage: String = "http://www.torrentino.me/movies?quality=hq&page="
+    let searchMoviesPage: String = "http://www.torrentino.me/search?type=movies&page="
+    
+    let movieLink: String = "section div.plate div.tiles div.tile a" // ссылка на страницу с фильмом
+
     
     var genres: [GenreAPI: [String]] = [
         .All: ["Все"],
@@ -50,14 +61,23 @@ class Torrentino {
     func parsePage(html: String) -> [String] {
         var links = [String]()
         if let doc = Kanna.HTML(html: html, encoding: encoding) {
-            for item in doc.css("section div.plate div.tiles div.tile a") {
+            for item in doc.css(movieLink) {
                 links.append(item["href"]!)
             }
         }
         return links
     }
     
-    func parseMovie(html: String, url: String) {
+    func parsePageFast(html: String) {
+        if let doc = Kanna.HTML(html: html, encoding: encoding) {
+            for item in doc.css(movieLink) {
+                delegate.requestFast(url: item["href"]!, operation: ParseOperation.One)
+            }
+        }
+        self.delegate.parsedPage()
+    }
+    
+    func parseMovie(html: String, url: String, fast: Bool = false) {
             
         if let doc = Kanna.HTML(html: html, encoding: encoding) {
 
@@ -172,10 +192,13 @@ class Torrentino {
                 })
                 
             }
-            
+
+        }
+    
+        if fast {
+            self.delegate.parsedPage()
         }
         
     }
-
     
 }

@@ -15,25 +15,27 @@ enum ParseOperation {
 
 protocol ParserDelegate {
     func updateCount()
+    func parserStateDidUpdate(running: Bool)
     func parserFailure(error: Error)
 }
 
 class Parser {
     
-    static let sharedInstance: Parser = {
-        let instance = Parser()
-        return instance
-    }()
+//    static let sharedInstance: Parser = {
+//        let instance = Parser()
+//        return instance
+//    }()
     
     var delegate: ParserDelegate?
     
     private let settings = UserDefaults.standard
     
-    private let tracker = Torrentino()
+    fileprivate let tracker = Torrentino()
+    
+    let parseGroup =  DispatchGroup()
     
     private var links = [String]() // links to movies
     private var parsingPage: Int = 1
-    
     
     private var stop = false {
         didSet {
@@ -51,6 +53,11 @@ class Parser {
     private var clean = false
     
     private var running = false
+    
+    init() {
+        tracker.delegate = self
+    }
+    
     
     public func cleanBase() {
         if running {
@@ -72,6 +79,8 @@ class Parser {
     public func startParsing(slow: Bool = true) {
         self.running = true
         
+        self.delegate?.parserStateDidUpdate(running: true)
+        
         if let lastdate = settings.object(forKey: "parseUpdate") as? Date {
             let hoursCount = Calendar.current.dateComponents([.hour], from: lastdate, to: Date()).hour ?? 0
             if hoursCount > 24 {
@@ -84,7 +93,7 @@ class Parser {
         if slow {
             self.requestSlow(url: link, operation: .All)
         } else {
-            // TODO: fast parsing
+            self.requestFast(url: link, operation: .All)
         }
     }
     
@@ -97,7 +106,6 @@ class Parser {
         if !url.contains(tracker.domain) {
             url = tracker.domain + url
         }
-        print(url)
         let delay = settings.double(forKey: "parseDelay") // the delay may change
         Alamofire.request(url).responseData { response in
             switch response.result {
@@ -115,6 +123,7 @@ class Parser {
                         if self.stop {
                             self.running = false
                             self.stop = false
+                            self.delegate?.parserStateDidUpdate(running: false)
                             return
                         }
                         if self.links.count > 0 {
@@ -128,6 +137,50 @@ class Parser {
                     })
                 }
             case .failure(let error):
+                self.delegate?.parserFailure(error: error)
+            }
+        }
+    }
+    
+    public func search(query: String) {
+        let link = tracker.searchMoviesPage + String(parsingPage) + "&search=\(query)"
+        
+        var wait = false
+        self.requestFast(url: link, operation: .All)
+        self.parseGroup.notify(queue: DispatchQueue.main, execute: {
+            wait = true
+        })
+        while !wait {
+            // wait search results
+        }
+    }
+    
+}
+
+extension Parser: TrackerDelegate {
+    
+    func parsedPage() {
+        self.parseGroup.leave()
+    }
+    
+    func requestFast(url: String, operation: ParseOperation) {
+        var url = url
+        if !url.contains(self.tracker.domain) {
+            url = self.tracker.domain + url
+        }
+        let urlEncoded = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        self.parseGroup.enter()
+        Alamofire.request(urlEncoded!).responseData { response in
+            switch response.result {
+            case .success:
+                if let data = response.result.value, let text = String(data: data, encoding: self.tracker.encoding) {
+                    switch operation {
+                    case .All: self.tracker.parsePageFast(html: text)
+                    case .One: self.tracker.parseMovie(html: text, url: url, fast: true)
+                    }
+                }
+            case .failure(let error):
+                self.parseGroup.enter()
                 self.delegate?.parserFailure(error: error)
             }
         }

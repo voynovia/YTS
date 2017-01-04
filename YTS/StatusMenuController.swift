@@ -11,7 +11,9 @@ import MASPreferences
 
 class StatusMenuController: NSObject {
     
-    let parser = Parser.sharedInstance
+    let settings = UserDefaults.standard
+    
+    let parser = Parser()
     let server = Server.sharedInstance
     
     @IBOutlet weak var statusMenu: NSMenu!
@@ -40,20 +42,14 @@ class StatusMenuController: NSObject {
     @IBOutlet weak var updateLibraries: NSMenuItem!
     @IBAction func updateLibrariesClicked(_ sender: Any) {
         parser.startParsing()
-        changeUpdates()
     }
     
     @IBOutlet weak var cancelLibrariesUpdate: NSMenuItem!
     @IBAction func cancelLibrariesUpdateClicked(_ sender: Any) {
         parser.stopParsing()
-        changeUpdates()
     }
     
-    private func changeUpdates() {
-        updateLibraries.isEnabled = !updateLibraries.isEnabled
-        cancelLibrariesUpdate.isEnabled = !cancelLibrariesUpdate.isEnabled
-    }
-    
+    @IBOutlet weak var cleanLibraries: NSMenuItem!
     @IBAction func cleanLibrariesClicked(_ sender: Any) {
         parser.cleanBase()
     }
@@ -99,6 +95,14 @@ class StatusMenuController: NSObject {
         statusMenu.autoenablesItems = false
         
         updateInformation()
+        
+        if settings.bool(forKey: "serverAutostart") == true {
+            self.server.start()
+        }
+        if settings.bool(forKey: "parserAutostart") == true {
+            self.parser.startParsing()
+        }
+        
     }
     
     fileprivate func updateInformation() {
@@ -114,12 +118,20 @@ extension StatusMenuController: ParserDelegate {
         self.updateInformation()
     }
     
+    func parserStateDidUpdate(running: Bool) {
+        updateLibraries.isEnabled = !running
+        cancelLibrariesUpdate.isEnabled = running
+        cleanLibraries.isEnabled = !running
+    }
+    
     func parserFailure(error: Error) {
+        parser.stopParsing()
         NSAlert.showAlert(title: "Warning", message: error.localizedDescription, style: .critical)
     }
 }
 
 extension StatusMenuController: ServerDelegate {
+    
     func serverStateDidUpdate(running: Bool) {
         startServer.isEnabled = !running
         stopServer.isEnabled = running
@@ -131,6 +143,7 @@ extension StatusMenuController: ServerDelegate {
     }
     
     func serverFailure(error: ServerError) {
+        server.stop()
         NSAlert.showAlert(title: "Warning", message: error.localizedDescription, style: .critical)
     }
 }

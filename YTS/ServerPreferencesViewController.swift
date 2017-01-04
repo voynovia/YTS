@@ -14,13 +14,17 @@ class ServerPreferencesViewController: NSViewController {
     let settings = UserDefaults.standard
     
     @IBOutlet weak var portTextField: NSTextField!
+
+    @IBOutlet weak var autostartCheckBox: NSButton!
     
     @IBAction func saveButton(_ sender: NSButton) {
-        settings.setValue(portTextField.integerValue, forKey: "serverPort")
+        settings.set(portTextField.integerValue, forKey: "serverPort")
+        settings.set(autostartCheckBox.state == NSOnState ? true : false, forKey: "serverAutostart")
     }
     
     @IBAction func saveRestartButton(_ sender: NSButton) {
-        settings.setValue(portTextField.integerValue, forKey: "serverPort")
+        
+        self.saveButton(sender)
         
         let server = Server.sharedInstance
         server.restart()
@@ -28,7 +32,9 @@ class ServerPreferencesViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.portTextField.integerValue = settings.integer(forKey: "serverPort")
+        self.autostartCheckBox.state = settings.bool(forKey: "serverAutostart") == false ? NSOffState : NSOnState
     }
     
     override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {

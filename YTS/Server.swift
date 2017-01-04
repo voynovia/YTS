@@ -91,6 +91,8 @@ class Server {
         // List Movies
         self.server["/api/v2/list_movies.json"] = { r in
             
+            let start = Date()
+            
             var params = self.moviesAPI.params
             
             if let genreParam = r.queryParams.first(where: {$0.0 == "genre" }) {
@@ -109,8 +111,9 @@ class Server {
                 params.sort_by = sortParam.1.lowercased().trim()
             }
             
-            var response = [String:Any]()
             let data = self.moviesAPI.moviesInfo(params: params)
+            
+            var response = [String:Any]()
             if data.count > 0 {
                 response["status"] = "ok"
                 response["status_message"] = "Query was successful"
@@ -119,12 +122,14 @@ class Server {
                 response["status"] = "error"
                 response["status_message"] = "Query not successful"
             }
-            response["meta"] = self.moviesAPI.metaInfo()
+            
+            response["@meta"] = self.metaInfo(executionTime: Date().timeIntervalSince(start))
             return HttpResponse.ok(HttpResponseBody.json(response as AnyObject))
         }
         
         // Movie Details
         self.server["/api/v2/movie_details.json"] = { r in
+            let start = Date()
             var response = [String:Any]()
             if let idParam = r.queryParams.first(where: {$0.0 == "movie_id" }), let id = Int(idParam.1) {
                 let data = self.moviesAPI.detailInfo(id: id)
@@ -137,12 +142,24 @@ class Server {
                     response["status_message"] = "movie_id does not exist"
                 }
             }
-            response["meta"] = self.moviesAPI.metaInfo()
+            
+            response["@meta"] = self.metaInfo(executionTime: Date().timeIntervalSince(start))
             return HttpResponse.ok(HttpResponseBody.json(response as AnyObject))
         }
+        
     }
-    
+        
     private func startShowsAPI() {
         
+    }
+    
+    // Meta
+    func metaInfo(executionTime: Double) -> [String: Any] {
+        var meta = [String: Any]()
+        meta["server_time"] = Date.timeIntervalBetween1970AndReferenceDate
+        meta["server_timezone"] = TimeZone.current.identifier
+        meta["api_version"] = 2
+        meta["execution_time"] = executionTime
+        return meta
     }
 }

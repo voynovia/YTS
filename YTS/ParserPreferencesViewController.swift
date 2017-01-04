@@ -14,14 +14,17 @@ class ParserPreferencesViewController: NSViewController {
     let settings = UserDefaults.standard
     
     @IBOutlet weak var delayTextField: NSTextField!
+    @IBOutlet weak var autostartCheckBox: NSButton!
     
     @IBAction func saveButton(_ sender: NSButton) {
         settings.setValue(delayTextField.doubleValue, forKey: "parseDelay")
+        settings.set(autostartCheckBox.state == NSOnState ? true : false, forKey: "parserAutostart")
     }
         
     override func viewDidLoad() {
         super.viewDidLoad()
         self.delayTextField.doubleValue = settings.double(forKey: "parseDelay")
+        self.autostartCheckBox.state = settings.bool(forKey: "parserAutostart") == false ? NSOffState : NSOnState
     }
     
     override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {

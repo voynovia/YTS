@@ -9,7 +9,7 @@
 import Foundation
 
 class MoviesAPI {
-    
+        
     var params = Params()
     
     struct Params {
@@ -49,6 +49,12 @@ class MoviesAPI {
     // List Movies
     func moviesInfo(params: Params) -> [String: Any] {
         
+        if let queryParam = params.query_term {
+            let parser = Parser()
+            parser.search(query: queryParam)
+            
+        }
+
         let database = DataBase()
         var objects = Array(database.getObjects(type: Movie.self))
         
@@ -83,6 +89,7 @@ class MoviesAPI {
             data["limit"] = params.limit
             data["page_number"] = params.page
             data["movies"] = movies
+            
             return data
         }
         return [String: Any]()
@@ -119,15 +126,4 @@ class MoviesAPI {
         }
     }
         
-    // Meta
-    func metaInfo() -> [String: Any] {
-        let tz = TimeZone.abbreviationDictionary.first { $0.value == NSTimeZone.local.identifier }
-        var meta = [String: Any]()
-        meta["server_time"] = Date.timeIntervalBetween1970AndReferenceDate
-        meta["server_timezone"] = tz?.key ?? "MSD"
-        meta["api_version"] = 2
-        meta["execution_time"] = 0
-        return meta
-    }
-    
 }

@@ -18,6 +18,7 @@
         <customObject id="NcH-sy-i1H" customClass="StatusMenuController" customModule="YTS" customModuleProvider="target">
             <connections>
                 <outlet property="cancelLibrariesUpdate" destination="hDD-jb-ric" id="WGG-s4-TPk"/>
+                <outlet property="cleanLibraries" destination="NNO-qX-Ch8" id="SoX-zb-iFL"/>
                 <outlet property="informationView" destination="t1z-aO-Iaj" id="pRK-fX-lDY"/>
                 <outlet property="startServer" destination="zjX-XM-TpA" id="Luf-IP-NbM"/>
                 <outlet property="statusMenu" destination="26U-5K-RlB" id="XMu-Qp-P7A"/>

@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ParserPreferencesViewController" customModule="YTS" customModuleProvider="target">
             <connections>
+                <outlet property="autostartCheckBox" destination="mkj-hH-p8f" id="aP4-Au-J5P"/>
                 <outlet property="delayTextField" destination="c2Z-xP-ccS" id="CIP-H6-WJL"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
@@ -46,6 +47,14 @@
                     <connections>
                         <action selector="saveButton:" target="-2" id="bVg-dn-8E0"/>
                     </connections>
+                </button>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mkj-hH-p8f">
+                    <rect key="frame" x="18" y="99" width="79" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Autostart" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Pni-M8-6Lz">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
                 </button>
             </subviews>
             <point key="canvasLocation" x="158.5" y="113"/>
