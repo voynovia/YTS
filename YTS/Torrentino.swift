@@ -25,7 +25,6 @@ class Torrentino {
     let searchMoviesPage: String = "http://www.torrentino.me/search?type=movies&page="
     
     let movieLink: String = "section div.plate div.tiles div.tile a" // ссылка на страницу с фильмом
-
     
     var genres: [GenreAPI: [String]] = [
         .All: ["Все"],
@@ -54,7 +53,7 @@ class Torrentino {
         .Western: ["вестерн"]
     ]
     
-    var audio = ["iTunes", "Лицензия", "Дублированный"]
+    let audio = ["iTunes", "Лицензия", "Дублированный"]
     
     var sort = ["date", "rating", "popularity"]
     
@@ -81,7 +80,6 @@ class Torrentino {
             
         if let doc = Kanna.HTML(html: html, encoding: encoding) {
 
-            var torrents = [Torrent]()
             var genres = [Genre]()
             
             let movie = Movie()
@@ -91,52 +89,73 @@ class Torrentino {
             
             // Add Files Information
             // ------------------------
-            var need1080 = true
-            var need720 = true
-            var currentQuality = QualityAPI.p720
-            var adding = false
+
+            var torrent720: Torrent?
+            var torrent1080: Torrent?
+            
             if let list = doc.at_css("div.main div.entity div.list-start table.quality") {
+                
+                var group: String?
                 for item in list.css("tr.item") {
-                    if let qualityText = item.at_css("td.video")?.text,
-                        let audioText = item.at_css("td.audio")?.text?.trim() {
-                        
-                        if qualityText.contains("1920") && need1080 && audio.contains(audioText) {
-                            currentQuality = QualityAPI.p1080
-                            adding = true
-                            need1080 = false
-                        } else if qualityText.contains("720") && need720 && audio.contains(audioText) {
-                            currentQuality = QualityAPI.p720
-                            adding = true
-                            need720 = false
+
+                    if let quality = item.at_css("td.quality a.group-label") {
+                        if (quality["title"]?.contains("Blu-ray"))! || (quality["title"]?.contains("BDRip"))! || (quality["title"]?.contains("HDRip"))! {
+                            group = quality["data-group"]
+                        } else {
+                            continue
                         }
-                        
-                        if adding {
-                            let torrent = Torrent()
-                            torrent.idMovie = movie.id
-                            torrent.qualityEnum = currentQuality
-                            if let sizeString = item.at_css("td.size")?.text, let size = sizeString.toDouble {
-                                torrent.size = sizeString.contains("ГБ") ? String(describing: size) + " GB" : String(describing: size) + " MB"
-                                torrent.size_bytes = String(Int(size) * 1000000000)
-                            }
-                            torrent.date_uploaded = item.at_css("td.updated")?.text?.changeDateFormat(fromFormat: "dd.MM.yyyy", toFormat: "yyyy-MM-dd HH:mm:ss")
-                            torrent.date_uploaded_unix = torrent.date_uploaded?.toUnixTime(format: "yyyy-MM-dd HH:mm:ss") ?? 0.0
-                            torrent.seeds = item.at_css("td.seed-leech span.seed")?.text?.toInteger ?? 0
-                            torrent.peers = item.at_css("td.seed-leech span.leech")?.text?.toInteger ?? 0
-                            torrent.url = item.at_css("td.download a[data-type=download]")?["data-torrent"]
-                            torrent._hash = item.at_css("td.download a[data-type=download]")?["data-default"]?.between(from: "btih:", to: "&")
-                            
-                            torrents.append(torrent)
-                            
-                            adding = false
+                    } else {
+                        if item["data-group"] != group {
+                            continue
                         }
                     }
+                    
+                    if let videoText = item.at_css("td.video")?.text, let audioText = item.at_css("td.audio")?.text?.trim(),
+                        let seedsText = item.at_css("td.seed-leech span.seed")?.text?.toInteger {
+                        
+                        let curTorrent = Torrent()
+                        if videoText.hasPrefix("1280") && audio.contains(audioText) {
+                            if let maxSeeds = torrent1080?.seeds {
+                                if seedsText < maxSeeds {
+                                    continue
+                                }
+                            }
+                            curTorrent.qualityEnum = QualityAPI.p1080
+                            torrent1080 = curTorrent
+                        } else if videoText.hasPrefix("720") && audio.contains(audioText) {
+                            if let maxSeeds = torrent720?.seeds {
+                                if seedsText < maxSeeds {
+                                    continue
+                                }
+                            }
+                            curTorrent.qualityEnum = QualityAPI.p720
+                            torrent720 = curTorrent
+                        } else {
+                            continue
+                        }
+                        
+                        curTorrent.idMovie = movie.id
+                        if let sizeString = item.at_css("td.size")?.text, let size = sizeString.toDouble {
+                            curTorrent.size = sizeString.contains("ГБ") ? String(describing: size) + " GB" : String(describing: size) + " MB"
+                            curTorrent.size_bytes = String(Int(size) * 1000000000)
+                        }
+                        curTorrent.date_uploaded = item.at_css("td.updated")?.text?.changeDateFormat(fromFormat: "dd.MM.yyyy", toFormat: "yyyy-MM-dd HH:mm:ss")
+                        curTorrent.date_uploaded_unix = curTorrent.date_uploaded?.toUnixTime(format: "yyyy-MM-dd HH:mm:ss") ?? 0.0
+                        curTorrent.seeds = seedsText
+                        curTorrent.peers = item.at_css("td.seed-leech span.leech")?.text?.toInteger ?? 0
+                        curTorrent.url = item.at_css("td.download a[data-type=download]")?["data-torrent"]
+                        curTorrent._hash = item.at_css("td.download a[data-type=download]")?["data-default"]?.between(from: "btih:", to: "&")
+                        
+                    }
+                    
                 }
             }
             
             // Add Movie Information
             // ------------------------
             
-            if torrents.count > 0 {
+            if torrent720 != nil || torrent1080 != nil {
+
                 if let head = doc.at_css("div.main div.entity div.head-plate") {
                     
                     movie.title = head.at_css("h1[itemprop='name']")?.text
@@ -150,8 +169,12 @@ class Torrentino {
                     }
                     movie.small_cover_image = "https://st.kp.yandex.net/images/film_iphone/iphone360_"+String(movie.id)+".jpg"
                     movie.medium_cover_image = "https://st.kp.yandex.net/images/film_big/"+String(movie.id)+".jpg"
-                    let synopsis = head.xpath("//div[@class='specialty']/text()")[1].text?.trim()
-                    movie.synopsis = synopsis != nil ? head.at_css("div.specialty p")?.text : synopsis
+                    
+                    if let synopsis = head.xpath("//div[@class='specialty']/text()")[1].text?.trim(), !synopsis.isEmpty {
+                        movie.synopsis = synopsis
+                    } else {
+                        movie.synopsis = head.at_css("div.specialty p")?.text
+                    }
                     movie.yt_trailer_code = nil
             
                     for item in head.css("a[href*=genres]") {
@@ -172,10 +195,14 @@ class Torrentino {
                 database.executeInTransaction(execute: {
                 
                     database.updateInTransaction(object: movie)
-                    
-                    for torrent in torrents {
-                        database.updateInTransaction(object: torrent)
-                        movie.torrents.append(torrent)
+
+                    if let tor = torrent720 {
+                        database.updateInTransaction(object: tor)
+                        movie.torrents.append(tor)
+                    }
+                    if let tor = torrent1080 {
+                        database.updateInTransaction(object: tor)
+                        movie.torrents.append(tor)
                     }
                     
                     if genres.count > 0 {
